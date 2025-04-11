@@ -1,86 +1,106 @@
-import SkillCard from "@/components/skill-card"
+"use client"
 
-export default function MiddleSection({ onUserClick }) {
-  const skills = [
-    {
-      skillName: "UI/UX Design",
-      description:
-        "Learn the fundamentals of user interface and experience design. This skill covers wireframing, prototyping, and user testing methodologies to create intuitive digital experiences.",
-      deliveredBy: {
-        name: "Sarah Johnson",
-        avatar: "/placeholder.svg?height=40&width=40",
-        profession: "Senior UX Designer",
-      },
-      duration: "4 weeks",
-      likes: 95,
-      comments: 18,
-      shares: 12,
-    },
-    {
-      skillName: "React Development",
-      description:
-        "Master React.js from basics to advanced concepts. Build responsive web applications with modern JavaScript frameworks and learn state management techniques.",
-      deliveredBy: {
-        name: "Alex Morgan",
-        avatar: "/placeholder.svg?height=40&width=40",
-        profession: "Frontend Developer",
-      },
-      duration: "6 weeks",
-      likes: 78,
-      comments: 23,
-      shares: 15,
-    },
-    {
-      skillName: "Data Science",
-      description:
-        "Introduction to data analysis and machine learning algorithms. Learn how to extract insights from large datasets and build predictive models using Python.",
-      deliveredBy: {
-        name: "Michael Chen",
-        avatar: "/placeholder.svg?height=40&width=40",
-        profession: "Data Scientist",
-      },
-      duration: "8 weeks",
-      likes: 112,
-      comments: 34,
-      shares: 27,
-    },
-    {
-      skillName: "Culinary Arts",
-      description:
-        "Learn professional cooking techniques and recipes from around the world. This skill covers knife skills, flavor combinations, and presentation techniques.",
-      deliveredBy: {
-        name: "Emily Rodriguez",
-        avatar: "/placeholder.svg?height=40&width=40",
-        profession: "Executive Chef",
-      },
-      duration: "5 weeks",
-      likes: 67,
-      comments: 15,
-      shares: 9,
-    },
-    {
-      skillName: "Mechanical Engineering",
-      description:
-        "Fundamentals of mechanical systems design and analysis. Learn about material properties, stress analysis, and CAD modeling for engineering applications.",
-      deliveredBy: {
-        name: "David Kim",
-        avatar: "/placeholder.svg?height=40&width=40",
-        profession: "Mechanical Engineer",
-      },
-      duration: "10 weeks",
-      likes: 45,
-      comments: 12,
-      shares: 8,
-    },
-  ]
+import { useEffect, useState } from "react"
+import SkillCard from "@/components/skill-card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useAuth } from "@/context/auth-context"
+
+export default function MiddleSection({ onUserClick, onStartVideoCall }) {
+  const [skills, setSkills] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("all")
+  const [categoryFilter, setCategoryFilter] = useState("all")
+  const { user } = useAuth()
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        setLoading(true)
+        let url = "/api/skills"
+
+        if (activeTab === "following" && user) {
+          url = "/api/skills/following"
+        }
+
+        if (categoryFilter !== "all") {
+          url += `?category=${categoryFilter}`
+        }
+
+        const response = await fetch(url)
+        const data = await response.json()
+        setSkills(data)
+      } catch (error) {
+        console.error("Error fetching skills:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSkills()
+  }, [activeTab, categoryFilter, user])
 
   return (
     <div className="flex-1 space-y-4 pb-16 md:pb-0">
-      <div className="rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md">
-        <h2 className="mb-4 text-lg font-semibold">Available Skills</h2>
-        {skills.map((skill, index) => (
-          <SkillCard key={index} {...skill} onUserClick={onUserClick} />
-        ))}
+      <div className="rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+          <h2 className="text-lg font-semibold">Available Skills</h2>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="design">Design</SelectItem>
+                <SelectItem value="development">Development</SelectItem>
+                <SelectItem value="marketing">Marketing</SelectItem>
+                <SelectItem value="business">Business</SelectItem>
+                <SelectItem value="cooking">Cooking</SelectItem>
+                <SelectItem value="mechanical">Mechanical</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input type="search" placeholder="Search skills..." className="w-full sm:w-auto" />
+          </div>
+        </div>
+
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="all">All Skills</TabsTrigger>
+            <TabsTrigger value="following">Following</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          </div>
+        ) : skills.length > 0 ? (
+          skills.map((skill) => (
+            <SkillCard
+              key={skill.id}
+              id={skill.id}
+              skillName={skill.name}
+              category={skill.category}
+              description={skill.description}
+              deliveredBy={skill.deliveredBy}
+              duration={skill.duration}
+              likes={skill.likes}
+              comments={skill.comments}
+              shares={skill.shares}
+              isLiked={skill.isLiked}
+              onUserClick={onUserClick}
+              onStartVideoCall={onStartVideoCall}
+            />
+          ))
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground mb-4">No skills found</p>
+            <Button>Explore More Skills</Button>
+          </div>
+        )}
       </div>
     </div>
   )
