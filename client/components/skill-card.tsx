@@ -50,12 +50,11 @@ export default function SkillCard({
 
   const handleLike = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/skills/${id}/like`, {
+      const response = await fetch(`/api/skills/${id}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
       })
 
       if (response.ok) {
@@ -69,12 +68,11 @@ export default function SkillCard({
 
   const handleConnect = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${deliveredBy.id}/connect`, {
+      const response = await fetch(`/api/users/${deliveredBy.id}/connect`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
       })
 
       if (response.ok) {
@@ -103,26 +101,19 @@ export default function SkillCard({
 
   return (
     <Card className="mb-4 overflow-hidden transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950/50">
-      <CardHeader className="p-0">
-        <div className="relative h-40 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20">
-          <img
-            src={`/placeholder.svg?height=160&width=600&text=${encodeURIComponent(skillName)}`}
-            alt={skillName}
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-            <div className="flex flex-col gap-2">
-              <Badge variant="outline" className="bg-primary/10 text-primary hover:bg-primary/20">
-                {skillName}
-              </Badge>
-              <Badge variant="outline" className="w-fit">
-                {category}
-              </Badge>
-            </div>
-            <Badge variant="outline" className="bg-card">
-              {duration}
+      <CardHeader className="p-4 pb-0">
+        <div className="flex justify-between items-start">
+          <div className="flex flex-col gap-2">
+            <Badge variant="outline" className="bg-primary/10 text-primary hover:bg-primary/20">
+              {skillName}
+            </Badge>
+            <Badge variant="outline" className="w-fit">
+              {category}
             </Badge>
           </div>
+          <Badge variant="outline" className="bg-card">
+            {duration}
+          </Badge>
         </div>
       </CardHeader>
       <CardContent className="p-4">
@@ -132,7 +123,7 @@ export default function SkillCard({
           onClick={() => onUserClick(deliveredBy)}
         >
           <Avatar>
-            <AvatarImage src={deliveredBy.avatar || "/placeholder.svg"} alt={deliveredBy.name} />
+            <AvatarImage src={deliveredBy.avatar} alt={deliveredBy.name} />
             <AvatarFallback>{deliveredBy.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>

@@ -14,23 +14,13 @@ export function AuthProvider({ children }) {
     // Check if user is already logged in
     const checkAuth = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
-          credentials: "include",
-        })
+        const response = await fetch("/api/auth/me")
         if (response.ok) {
           const userData = await response.json()
           setUser(userData)
         }
       } catch (error) {
         console.error("Auth check error:", error)
-        // If API fails, use mock user data for demo
-        setUser({
-          id: "u1",
-          name: "Ritik Kumar",
-          email: "ritik@swaphere.com",
-          avatar: "/placeholder.svg?height=64&width=64",
-          profession: "Senior UX Designer",
-        })
       } finally {
         setLoading(false)
       }
@@ -42,13 +32,12 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = async (credential) => {
     try {
       setLoading(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`, {
+      const response = await fetch("/api/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ credential }),
-        credentials: "include",
       })
 
       if (response.ok) {
@@ -59,34 +48,14 @@ export function AuthProvider({ children }) {
           description: `Welcome back, ${userData.name}!`,
         })
       } else {
-        // If API fails, use mock user data for demo
-        const mockUser = {
-          id: "u1",
-          name: "Ritik Kumar",
-          email: "ritik@swaphere.com",
-          avatar: "/placeholder.svg?height=64&width=64",
-          profession: "Senior UX Designer",
-        }
-        setUser(mockUser)
-        toast({
-          title: "Demo mode active",
-          description: "Using mock data for demonstration",
-        })
+        const error = await response.json()
+        throw new Error(error.message || "Login failed")
       }
     } catch (error) {
-      console.error("Login error:", error)
-      // If API fails, use mock user data for demo
-      const mockUser = {
-        id: "u1",
-        name: "Ritik Kumar",
-        email: "ritik@swaphere.com",
-        avatar: "/placeholder.svg?height=64&width=64",
-        profession: "Senior UX Designer",
-      }
-      setUser(mockUser)
       toast({
-        title: "Demo mode active",
-        description: "Using mock data for demonstration",
+        title: "Login failed",
+        description: error.message,
+        variant: "destructive",
       })
     } finally {
       setLoading(false)
@@ -95,9 +64,8 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+      const response = await fetch("/api/auth/logout", {
         method: "POST",
-        credentials: "include",
       })
 
       if (response.ok) {
@@ -106,22 +74,9 @@ export function AuthProvider({ children }) {
           title: "Logged out",
           description: "You have been successfully logged out",
         })
-      } else {
-        // If API fails, still log out locally
-        setUser(null)
-        toast({
-          title: "Logged out",
-          description: "You have been successfully logged out",
-        })
       }
     } catch (error) {
       console.error("Logout error:", error)
-      // If API fails, still log out locally
-      setUser(null)
-      toast({
-        title: "Logged out",
-        description: "You have been successfully logged out",
-      })
     }
   }
 

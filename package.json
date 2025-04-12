@@ -59,19 +59,7 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "socket.io-client": "latest",
-    "express": "latest",
-    "mongoose": "latest",
-    "cors": "latest",
-    "cookie-parser": "latest",
-    "http": "latest",
-    "socket.io": "latest",
-    "dotenv": "latest",
-    "path": "latest",
-    "bcryptjs": "latest",
-    "jsonwebtoken": "latest",
-    "google-auth-library": "latest",
-    "multer": "latest",
-    "fs": "latest"
+    "react-intersection-observer": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

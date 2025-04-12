@@ -28,7 +28,7 @@ export default function Home() {
         description: `You're logged in as ${user?.name}`,
       })
     }
-  }, [isAuthenticated, user, toast])
+  }, [isAuthenticated, user])
 
   const handleUserClick = (user) => {
     setSelectedUser(user)

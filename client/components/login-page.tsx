@@ -25,7 +25,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        client_id: "742482579242-ii4ls7bhn45uut4pkcdvsa5fi7f0tk00.apps.googleusercontent.com",
         callback: handleCredentialResponse,
       })
       window.google.accounts.id.renderButton(document.getElementById("google-signin-button"), {
@@ -48,7 +48,7 @@ export default function LoginPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-          SwapHere
+          swapHere
         </h1>
         <p className="text-muted-foreground mt-2">Connect, learn, and share skills with professionals worldwide</p>
       </div>

@@ -29,9 +29,7 @@ export default function AppBar({ onAddSkillClick }) {
     if (query.length > 2) {
       setIsSearching(true)
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/search?q=${encodeURIComponent(query)}`, {
-          credentials: "include",
-        })
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
         const data = await response.json()
         setSearchResults(data)
       } catch (error) {
@@ -62,7 +60,7 @@ export default function AppBar({ onAddSkillClick }) {
             </SheetContent>
           </Sheet>
           <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-            SwapHere
+            swapHere
           </h1>
         </div>
         <div className="relative hidden w-full max-w-sm md:block">
@@ -103,7 +101,7 @@ export default function AppBar({ onAddSkillClick }) {
                     <div key={user.id} className="p-2 hover:bg-accent rounded-md cursor-pointer">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
-                          <AvatarImage src={user.avatar || "/placeholder.svg"} />
+                          <AvatarImage src={user.avatar} />
                           <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <span>{user.name}</span>

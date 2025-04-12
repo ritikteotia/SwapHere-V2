@@ -90,7 +90,7 @@ export default function VideoCall({ recipient, onEndCall }) {
         })
       }
     }
-  }, [socket, user, recipient, toast, onEndCall])
+  }, [socket, user, recipient])
 
   const initializeJitsi = () => {
     if (window.JitsiMeetExternalAPI && containerRef.current) {
@@ -249,7 +249,7 @@ export default function VideoCall({ recipient, onEndCall }) {
           <Card className="h-full flex flex-col overflow-hidden">
             <div className="p-4 border-b flex items-center gap-2">
               <Avatar>
-                <AvatarImage src={recipient.avatar || "/placeholder.svg"} alt={recipient.name} />
+                <AvatarImage src={recipient.avatar} alt={recipient.name} />
                 <AvatarFallback>{recipient.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>

@@ -53,10 +53,9 @@ export default function AddSkill({ onBack }) {
         data.append("image", formData.image)
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/skills`, {
+      const response = await fetch("/api/skills", {
         method: "POST",
         body: data,
-        credentials: "include",
       })
 
       if (response.ok) {

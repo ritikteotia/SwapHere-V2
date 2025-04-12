@@ -7,4 +7,5 @@ interface Window {
       }
     }
   }
+  JitsiMeetExternalAPI?: any
 }

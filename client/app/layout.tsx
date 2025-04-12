@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "SwapHere - Skill Exchange Platform",
   description: "Connect, learn, and share skills with professionals worldwide",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({ children }) {
@@ -29,6 +28,3 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-
-
-import './globals.css'
